@@ -1,8 +1,4 @@
-import {
-  AiOutlineCloudSync,
-  AiOutlinePlus,
-  AiOutlineDelete,
-} from "react-icons/ai";
+import { AiOutlineCloudSync, AiOutlineDelete } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 
