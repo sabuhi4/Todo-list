@@ -6,14 +6,14 @@ import {
   AiOutlineSchedule,
 } from "react-icons/ai";
 
-function Sidebar() {
+function Sidebar({ allTaskCount }) {
   return (
-    <div className="w-96 h-screen bg-gray-100 text-white p-4 fixed">
+    <div className=" border-r-2 w-96 h-screen bg-gray-200 text-white p-4 fixed">
       <div className="grid gap-4">
         <div className=" flex items-center justify-between p-4 rounded-lg shadow bg-blue-300 ">
           <AiOutlineInbox />
           <span>All</span>
-          <div>0</div>
+          <div>{allTaskCount}</div>
         </div>
         <div className="flex items-center justify-between p-4 rounded-lg shadow bg-red-300 ">
           <AiOutlineCalendar />

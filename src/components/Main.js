@@ -2,8 +2,7 @@ import { AiOutlineCloudSync, AiOutlineDelete } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 
-function Main() {
-  const [items, setItems] = useState([]);
+function Main({ items, setItems }) {
   const [context, setContext] = useState("");
   const [priority, setPriority] = useState("Low");
 
@@ -19,8 +18,6 @@ function Main() {
       }
       if (error) {
         console.error("Error fetching data:", error.message);
-      } else {
-        setItems(data);
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -99,9 +96,9 @@ function Main() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen p-6">
+    <div className="flex-1 ml-96 p-6">
       <form
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md"
+        className="bg-white p-6 rounded-lg shadow-md w-full  "
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold mb-4 text-gray-700">Add a Task</h2>
@@ -119,7 +116,7 @@ function Main() {
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
-          className="w-full p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-15 p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
@@ -137,7 +134,7 @@ function Main() {
       </form>
 
       {/* Display the Fetched Items */}
-      <div className="w-full max-w-md bg-white mt-6 p-6 rounded-lg shadow-md">
+      <div className="w-full  bg-white mt-6 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-700">Todo List</h2>
         <ul className="divide-y divide-gray-200">
           {items.map((item) => (
