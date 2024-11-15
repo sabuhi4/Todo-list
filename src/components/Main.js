@@ -12,6 +12,11 @@ function Main() {
     try {
       const { data, error } = await supabase.from("Todo-list").select("*");
 
+      if (data && Array.isArray(data)) {
+        setItems(data);
+      } else {
+        console.error("Data is not an array:", data);
+      }
       if (error) {
         console.error("Error fetching data:", error.message);
       } else {
@@ -38,15 +43,19 @@ function Main() {
     try {
       const { data, error } = await supabase
         .from("Todo-list")
-        .insert([{ checked: false, context, priority }]);
+        .insert([{ checked: false, context, priority }])
+        .select(); // This fetches the inserted row
 
       if (error) {
         console.error("Error inserting data:", error.message);
-      } else {
+      } else if (data && Array.isArray(data)) {
         setItems((prevItems) => [...prevItems, ...data]);
-        setContext("");
-        setPriority("Low");
+      } else {
+        console.error("Unexpected response format:", data);
       }
+
+      setContext("");
+      setPriority("Low");
     } catch (error) {
       console.error("Unexpected error:", error);
     }
