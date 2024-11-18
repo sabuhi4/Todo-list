@@ -1,13 +1,14 @@
 import { AiOutlineCloudSync, AiOutlineDelete } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
+import { HiMiniFlag } from "react-icons/hi2";
 
-function Main({ items, setItems }) {
+function Main({ items, setItems, flagged, setFlagged }) {
   const [context, setContext] = useState("");
   const [priority, setPriority] = useState("Low");
 
   // Fetch data from Supabase
-  async function fetchItems() {
+  const fetchItems = useCallback(async () => {
     try {
       const { data, error } = await supabase.from("Todo-list").select("*");
 
@@ -22,11 +23,11 @@ function Main({ items, setItems }) {
     } catch (error) {
       console.error("Unexpected error:", error);
     }
-  }
+  }, [setItems]);
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [fetchItems]);
 
   // Handle form submission
   async function handleSubmit(e) {
@@ -40,7 +41,7 @@ function Main({ items, setItems }) {
     try {
       const { data, error } = await supabase
         .from("Todo-list")
-        .insert([{ checked: false, context, priority }])
+        .insert([{ checked: false, context, priority, flagged }])
         .select(); // This fetches the inserted row
 
       if (error) {
@@ -53,6 +54,7 @@ function Main({ items, setItems }) {
 
       setContext("");
       setPriority("Low");
+      setFlagged(false);
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -123,6 +125,14 @@ function Main({ items, setItems }) {
           <option value="High">High</option>
         </select>
 
+        <input
+          type="checkbox"
+          checked={flagged}
+          onChange={(e) => setFlagged(e.target.checked)}
+          className=" m-5 mr-2 cursor-pointer"
+        />
+        <label className="text-gray-700">Flag Task</label>
+
         {/* Button to Submit Form */}
         <button
           type="submit"
@@ -172,6 +182,13 @@ function Main({ items, setItems }) {
                   >
                     {item.priority}
                   </span>
+                  <span>
+                    {item.flagged && <HiMiniFlag className="text-red-500" />}
+                  </span>
+                  {/* Display the created_at date */}
+                  <div className=" text-gray-500 text-sm">
+                    Created at: {new Date(item.created_at).toLocaleString()}
+                  </div>
                 </div>
               </div>
 
