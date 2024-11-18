@@ -3,9 +3,41 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import { HiMiniFlag } from "react-icons/hi2";
 
-function Main({ items, setItems, flagged, setFlagged }) {
+function Main({ items, setItems, filter }) {
   const [context, setContext] = useState("");
   const [priority, setPriority] = useState("Low");
+  const [flagged, setFlagged] = useState(false);
+  const [sortOrder, setSortOrder] = useState("Newest");
+
+  const filteredItems = items
+    .filter((item) => {
+      switch (filter) {
+        case "Today":
+          const todayStart = new Date().setHours(0, 0, 0, 0);
+          return new Date(item.created_at).getTime() >= todayStart;
+        case "Flagged":
+          return item.flagged;
+        case "Completed":
+          return item.checked;
+        case "All":
+        default:
+          return true;
+      }
+    })
+    .sort((a, b) => {
+      // Sorting logic based on sortOrder
+      switch (sortOrder) {
+        case "Newest":
+          return new Date(b.created_at) - new Date(a.created_at);
+        case "Oldest":
+          return new Date(a.created_at) - new Date(b.created_at);
+        case "Priority":
+          const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        default:
+          return 0;
+      }
+    });
 
   // Fetch data from Supabase
   const fetchItems = useCallback(async () => {
@@ -146,8 +178,19 @@ function Main({ items, setItems, flagged, setFlagged }) {
       {/* Display the Fetched Items */}
       <div className="w-full  bg-white mt-6 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-gray-700">Todo List</h2>
+        <div className="flex justify-end mb-4">
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+            <option value="Priority">Priority</option>
+          </select>
+        </div>
         <ul className="divide-y divide-gray-200">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <li
               key={item.id}
               className="py-2 flex justify-between items-center"

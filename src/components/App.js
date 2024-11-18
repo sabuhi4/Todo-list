@@ -4,17 +4,12 @@ import Sidebar from "./Sidebar";
 
 function App() {
   const [items, setItems] = useState([]);
-  const [flagged, setFlagged] = useState(false);
+  const [filter, setFilter] = useState("All");
 
   return (
-    <div flex>
-      <Sidebar allTaskCount={items.length} items={items} />
-      <Main
-        items={items}
-        setItems={setItems}
-        flagged={flagged}
-        setFlagged={setFlagged}
-      />
+    <div className="flex">
+      <Sidebar items={items} setFilter={setFilter} />
+      <Main items={items} setItems={setItems} filter={filter} />
     </div>
   );
 }
