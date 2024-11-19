@@ -33,6 +33,7 @@ function Main({ items, setItems, filter, setFilter }) {
   return (
     <div className="flex-1 ml-96 p-6">
       <TaskForm
+        setItems={setItems}
         context={context}
         setContext={setContext}
         priority={priority}

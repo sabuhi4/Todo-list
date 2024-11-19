@@ -20,19 +20,28 @@ function TaskForm({
     }
 
     try {
+      // Insert the new task
       const { data, error } = await supabase
         .from("Todo-list")
         .insert([{ checked: false, context, priority, flagged }])
-        .select(); // This fetches the inserted row
+        .select();
 
       if (error) {
         console.error("Error inserting data:", error.message);
-      } else if (data && Array.isArray(data)) {
-        setItems((prevItems) => [...prevItems, ...data]);
-      } else {
-        console.error("Unexpected response format:", data);
+      } else if (data) {
+        // Fetch updated task list from Supabase
+        const { data: updatedItems, error: fetchError } = await supabase
+          .from("Todo-list")
+          .select();
+
+        if (fetchError) {
+          console.error("Error fetching updated tasks:", fetchError.message);
+        } else {
+          setItems(updatedItems); // Replace local state with the fresh list
+        }
       }
 
+      // Reset form inputs
       setContext("");
       setPriority("Low");
       setFlagged(false);

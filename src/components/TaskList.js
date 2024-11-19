@@ -3,7 +3,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { HiMiniFlag } from "react-icons/hi2";
 import { supabase } from "../services/supabaseClient";
 
-function TaskList({ items, setItems, filter, setFilter }) {
+function TaskList({ items, setItems, filter }) {
   const [sortOrder, setSortOrder] = useState("Newest");
 
   const filteredItems = items
