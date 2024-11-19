@@ -38,6 +38,11 @@ function TaskList({ items, setItems, filter, setFilter }) {
 
   // Handle deleting an item
   async function handleDelete(id) {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+    if (!confirmDelete) return;
+
     try {
       const { error } = await supabase.from("Todo-list").delete().eq("id", id);
 
