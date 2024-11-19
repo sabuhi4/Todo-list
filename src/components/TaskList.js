@@ -4,6 +4,7 @@ import { HiMiniFlag } from "react-icons/hi2";
 import { supabase } from "../services/supabaseClient";
 
 function TaskList({ items, setItems, filter }) {
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
   const [editingId, setEditingId] = useState(null);
   const [editTask, setEditTask] = useState({
@@ -27,6 +28,10 @@ function TaskList({ items, setItems, filter }) {
           return true;
       }
     })
+    .filter((item) =>
+      // Apply search filter
+      item.context.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     .sort((a, b) => {
       switch (sortOrder) {
         case "Newest":
@@ -110,7 +115,14 @@ function TaskList({ items, setItems, filter }) {
   return (
     <div className="w-full bg-white mt-6 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-gray-700">Todo List</h2>
-      <div className="flex justify-end mb-4 gap-2">
+      <div className="flex justify-between mb-4 gap-2">
+        <input
+          type="text"
+          value={searchQuery}
+          placeholder="Search for tasks"
+          className="p-2 w-1/2 rounded-md border"
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
