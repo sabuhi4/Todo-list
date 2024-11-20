@@ -7,6 +7,7 @@ function Main({ items, setItems, filter, setFilter }) {
   const [context, setContext] = useState("");
   const [priority, setPriority] = useState("Low");
   const [flagged, setFlagged] = useState(false);
+  const [dueDate, setDueDate] = useState("");
 
   // Fetch data from Supabase
   const fetchItems = useCallback(async () => {
@@ -40,12 +41,16 @@ function Main({ items, setItems, filter, setFilter }) {
         setPriority={setPriority}
         flagged={flagged}
         setFlagged={setFlagged}
+        dueDate={dueDate}
+        setDueDate={setDueDate}
       />
       <TaskList
         items={items}
         setItems={setItems}
         filter={filter}
         setFilter={setFilter}
+        dueDate={dueDate}
+        setDueDate={setDueDate}
       />
     </div>
   );

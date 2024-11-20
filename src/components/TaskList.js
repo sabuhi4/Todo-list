@@ -3,7 +3,7 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { HiMiniFlag } from "react-icons/hi2";
 import { supabase } from "../services/supabaseClient";
 
-function TaskList({ items, setItems, filter }) {
+function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
   const [editingId, setEditingId] = useState(null);
@@ -11,6 +11,7 @@ function TaskList({ items, setItems, filter }) {
     context: "",
     priority: "Low",
     flagged: false,
+    due_date: null,
   });
 
   const filteredItems = items
@@ -168,13 +169,28 @@ function TaskList({ items, setItems, filter }) {
                       <option value="High">High</option>
                     </select>
                     <input
-                      type="checkbox"
-                      checked={editTask.flagged}
+                      type="date"
+                      value={editTask.due_date}
                       onChange={(e) =>
-                        setEditTask({ ...editTask, flagged: e.target.checked })
+                        setEditTask({ ...editTask, due_date: e.target.value })
                       }
-                      className="cursor-pointer"
+                      className="border rounded"
                     />
+                    <div className="flex gap-2 items-center">
+                      <label>Flag: </label>
+                      <input
+                        type="checkbox"
+                        checked={editTask.flagged}
+                        onChange={(e) =>
+                          setEditTask({
+                            ...editTask,
+                            flagged: e.target.checked,
+                          })
+                        }
+                        className="cursor-pointer w-5 h-5 items-center justify-center"
+                      />
+                    </div>
+
                     <button
                       type="submit"
                       className="bg-green-500 text-white px-2 rounded"
@@ -213,8 +229,19 @@ function TaskList({ items, setItems, filter }) {
                         {item.priority}
                       </span>
                       {item.flagged && <HiMiniFlag className="text-red-500" />}
-                      <div className="text-sm text-gray-500">
-                        Created at: {new Date(item.created_at).toLocaleString()}
+                      <div className="text-sm text-gray-500 flex gap-10 justify-between">
+                        <span className="text-gray-900">
+                          Created on:{" "}
+                          {new Date(item.created_at).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
+                        </span>
+                        <span className="text-red-400">
+                          Due to Date:{" "}
+                          {new Date(item.due_date).toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </>
@@ -231,6 +258,9 @@ function TaskList({ items, setItems, filter }) {
                       context: item.context,
                       priority: item.priority,
                       flagged: item.flagged,
+                      due_date: item.due_date
+                        ? item.due_date.split("T")[0]
+                        : "",
                     });
                   }}
                   className="text-blue-500 hover:text-blue-700"

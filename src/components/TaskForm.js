@@ -9,6 +9,8 @@ function TaskForm({
   setPriority,
   flagged,
   setFlagged,
+  dueDate,
+  setDueDate,
 }) {
   // Handle form submission
   async function handleSubmit(e) {
@@ -23,7 +25,9 @@ function TaskForm({
       // Insert the new task
       const { data, error } = await supabase
         .from("Todo-list")
-        .insert([{ checked: false, context, priority, flagged }])
+        .insert([
+          { checked: false, context, priority, flagged, due_date: dueDate },
+        ])
         .select();
 
       if (error) {
@@ -45,6 +49,7 @@ function TaskForm({
       setContext("");
       setPriority("Low");
       setFlagged(false);
+      setDueDate(null);
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -64,25 +69,31 @@ function TaskForm({
         value={context}
         onChange={(e) => setContext(e.target.value)}
       />
-
-      {/* Select for Priority */}
-      <select
-        value={priority}
-        onChange={(e) => setPriority(e.target.value)}
-        className="w-15 p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-      </select>
-
-      <input
-        type="checkbox"
-        checked={flagged}
-        onChange={(e) => setFlagged(e.target.checked)}
-        className=" m-5 mr-2 cursor-pointer"
-      />
-      <label className="text-gray-700">Flag Task</label>
+      <div className="flex gap-2 items-center justify-end">
+        {/* Select for Priority */}
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="w-15 p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <input
+          type="date"
+          value={dueDate || ""}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="w-15 p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="checkbox"
+          checked={flagged}
+          onChange={(e) => setFlagged(e.target.checked)}
+          className=" m-5 mr-2 cursor-pointer"
+        />
+        <label className="text-gray-700">Flag Task</label>
+      </div>
 
       {/* Button to Submit Form */}
       <button
