@@ -2,7 +2,6 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://sabuhi4.github.io/Todo-list",
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
     "@testing-library/jest-dom": "^5.17.0",
