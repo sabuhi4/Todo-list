@@ -30,7 +30,6 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
       }
     })
     .filter((item) =>
-      // Apply search filter
       item.context.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
@@ -47,7 +46,6 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
       }
     });
 
-  // Handle Editing Task
   async function handleEditSubmit(e) {
     e.preventDefault();
     try {
@@ -71,7 +69,6 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
     }
   }
 
-  // Handle deleting an item
   async function handleDelete(id) {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this task?"
@@ -91,7 +88,6 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
     }
   }
 
-  // Handle toggling the completion status
   async function handleToggleChecked(id, currentChecked) {
     try {
       const { error } = await supabase
@@ -114,32 +110,30 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
   }
 
   return (
-    <div className="w-full bg-white mt-6 p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-gray-700">Todo List</h2>
-      <div className="flex justify-between mb-4 gap-2">
+    <div className="w-full bg-white dark:bg-gray-800 mt-6 p-6 rounded-lg shadow-md transition-colors">
+      <h2 className="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-200">Todo List</h2>
+      <div className="flex flex-col sm:flex-row justify-between mb-4 gap-2">
         <input
           type="text"
           value={searchQuery}
           placeholder="Search for tasks"
-          className="p-2 w-1/2 rounded-md border"
+          className="p-2 w-full sm:w-1/2 rounded-md border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
-          className="p-2 border rounded-md"
+          className="p-2 border dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
         >
           <option value="Newest">Newest</option>
           <option value="Oldest">Oldest</option>
           <option value="Priority">Priority</option>
         </select>
       </div>
-      <ul className="divide-y divide-gray-200">
+      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
         {filteredItems.map((item) => (
           <li key={item.id} className="py-2">
-            {/* Parent flex container to separate content and buttons */}
             <div className="flex justify-between items-center">
-              {/* Left content (Task Information) */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -148,21 +142,21 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                   className="cursor-pointer"
                 />
                 {editingId === item.id ? (
-                  <form onSubmit={handleEditSubmit} className="flex gap-2">
+                  <form onSubmit={handleEditSubmit} className="flex flex-col md:flex-row gap-2 w-full">
                     <input
                       type="text"
                       value={editTask.context}
                       onChange={(e) =>
                         setEditTask({ ...editTask, context: e.target.value })
                       }
-                      className="border p-1 rounded"
+                      className="border dark:border-gray-600 p-1 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 flex-1 min-w-0"
                     />
                     <select
                       value={editTask.priority}
                       onChange={(e) =>
                         setEditTask({ ...editTask, priority: e.target.value })
                       }
-                      className="border p-1 rounded"
+                      className="border dark:border-gray-600 p-1 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     >
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
@@ -174,10 +168,10 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                       onChange={(e) =>
                         setEditTask({ ...editTask, due_date: e.target.value })
                       }
-                      className="border rounded"
+                      className="border dark:border-gray-600 p-1 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                     <div className="flex gap-2 items-center">
-                      <label>Flag: </label>
+                      <label className="text-gray-700 dark:text-gray-300 text-sm">Flag: </label>
                       <input
                         type="checkbox"
                         checked={editTask.flagged}
@@ -187,19 +181,20 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                             flagged: e.target.checked,
                           })
                         }
-                        className="cursor-pointer w-5 h-5 items-center justify-center"
+                        className="cursor-pointer w-5 h-5 accent-blue-500"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="bg-green-500 text-white px-2 rounded"
+                      className="bg-green-500 dark:bg-green-600 text-white px-3 py-1 rounded hover:bg-green-600 dark:hover:bg-green-700 transition-colors"
                     >
                       Save
                     </button>
                     <button
+                      type="button"
                       onClick={() => setEditingId(null)}
-                      className="bg-gray-500 text-white px-2 rounded"
+                      className="bg-gray-500 dark:bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors"
                     >
                       Cancel
                     </button>
@@ -208,10 +203,10 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                   <>
                     <div>
                       <strong
-                        className={`${
+                        className={`break-words ${
                           item.checked
-                            ? "line-through text-gray-400"
-                            : "text-gray-800"
+                            ? "line-through text-gray-400 dark:text-gray-500"
+                            : "text-gray-800 dark:text-gray-200"
                         }`}
                       >
                         {item.context}
@@ -220,27 +215,33 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                       <span
                         className={`${
                           item.priority === "High"
-                            ? "text-red-600"
+                            ? "text-red-600 dark:text-red-400"
                             : item.priority === "Medium"
-                            ? "text-yellow-600"
-                            : "text-green-600"
+                            ? "text-yellow-600 dark:text-yellow-400"
+                            : "text-green-600 dark:text-green-400"
                         } font-semibold`}
                       >
                         {item.priority}
                       </span>
-                      {item.flagged && <HiMiniFlag className="text-red-500" />}
-                      <div className="text-sm text-gray-500 flex gap-10 justify-between">
-                        <span className="text-gray-900">
-                          Created on:{" "}
+                      {item.flagged && <HiMiniFlag className="text-red-500 dark:text-red-400" />}
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex flex-col md:flex-row gap-2 md:gap-10">
+                        <span className="text-gray-900 dark:text-gray-300">
+                          Created:{" "}
                           {new Date(item.created_at).toLocaleString("en-US", {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                           })}
                         </span>
-                        <span className="text-red-400">
-                          Due to Date:{" "}
-                          {new Date(item.due_date).toLocaleString()}
+                        <span className="text-red-400 dark:text-red-300">
+                          Due:{" "}
+                          {item.due_date
+                            ? new Date(item.due_date).toLocaleString("en-US", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                            : "No due date"}
                         </span>
                       </div>
                     </div>
@@ -248,9 +249,7 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                 )}
               </div>
 
-              {/* Right buttons container */}
               <div className="flex items-center gap-2">
-                {/* Edit Button */}
                 <button
                   onClick={() => {
                     setEditingId(item.id);
@@ -263,15 +262,14 @@ function TaskList({ items, setItems, filter, dueDate, setDueDate }) {
                         : "",
                     });
                   }}
-                  className="text-blue-500 hover:text-blue-700"
+                  className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                 >
                   <AiOutlineEdit className="text-2xl" />
                 </button>
 
-                {/* Delete Button */}
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
                 >
                   <AiOutlineDelete className="text-2xl" />
                 </button>
